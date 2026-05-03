@@ -214,3 +214,5 @@ data: {"type": "error", "detail": "..."}          # on failure
 - `backend/doors.db` is excluded from git — user data stays local
 - `backend/static/images/` is excluded from git — generated images are large binary files
 - `frontend/config.js` is excluded from git — API base URL is environment-specific
+
+_20220808018
