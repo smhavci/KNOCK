@@ -20,6 +20,7 @@ load_dotenv()
 init_db()
 
 STATIC_DIR = Path(__file__).parent / "static" / "images"
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 
 # BASE_URL is set via environment variable on Railway; falls back to localhost for dev
