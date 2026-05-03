@@ -194,7 +194,7 @@ async def create_door(req: MemoryRequest, user=Depends(require_auth)):
             async with httpx.AsyncClient(timeout=30) as client:
                 img_res = await client.get(temp_url)
                 filepath.write_bytes(img_res.content)
-            image_url = f"{BASE_URL}/static/images/{filename}"
+            image_url = f"/static/images/{filename}"
         except Exception as e:
             yield _sse({"type": "error", "detail": f"Görsel kaydedilemedi: {e}"})
             return
@@ -274,7 +274,7 @@ async def speak(req: PoemRequest):
 def gallery_data():
     doors = get_all_doors()
     for door in doors:
-        door["image_url"] = f"{BASE_URL}/static/{door['image_path']}"
+        door["image_url"] = f"/static/{door['image_path']}"
     return doors
 
 
