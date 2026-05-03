@@ -41,9 +41,9 @@ app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), na
 if FRONTEND_DIR.exists():
     app.mount("/app", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
-claude     = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-claude_async = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-oai        = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+claude     = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy"))
+claude_async = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy"))
+oai        = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "dummy"))
 
 
 # ── Auth models ───────────────────────────────────────────
