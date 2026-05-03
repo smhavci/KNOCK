@@ -1,0 +1,34 @@
+# API Keys — never commit
+backend/.env
+.env
+
+# Frontend config (API base URL — environment specific)
+frontend/config.js
+
+# Generated images (large binary files, regenerated on demand)
+backend/static/images/
+
+# Database (user data — local only)
+backend/doors.db
+
+# Media files (copyrighted — add your own locally)
+# bg.mp4        → any looping video for background
+# dylan.mp3     → any ambient audio track
+frontend/bg.mp4
+frontend/dylan.mp3
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

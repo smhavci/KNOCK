@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Doors — KNOCK</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="gallery.css" />
+</head>
+<body>
+
+  <audio id="bg-audio" src="dylan.mp3" loop preload="auto"></audio>
+
+  <button id="mute-btn" aria-label="Mute">
+    <span id="mute-icon">♪</span>
+  </button>
+
+  <video class="scene-video" autoplay loop muted playsinline>
+    <source src="bg.mp4" type="video/mp4" />
+  </video>
+  <div class="color-grade"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <main>
+    <header>
+      <p class="eyebrow">1973</p>
+      <h1>KNOCK</h1>
+      <p class="subtitle">Every door knocked. Every childhood left behind.</p>
+    </header>
+
+    <div class="gallery-nav">
+      <a href="index.html" class="nav-link">← knock your door</a>
+      <span id="door-count" class="door-count"></span>
+    </div>
+
+    <div class="context-strip">
+      <p>
+        In 1973, Bob Dylan wrote "Knockin' on Heaven's Door" for a dying sheriff
+        who had to lay down his badge. The song became something larger —
+        a meditation on the weight of things we carry, and the quiet relief of letting them go.
+        These are the doors of those who knocked.
+      </p>
+    </div>
+
+    <section id="gallery-grid" class="gallery-grid">
+      <!-- doors rendered by JS -->
+    </section>
+
+    <section id="empty-state" class="empty-state hidden">
+      <p>No doors yet. Be the first to knock.</p>
+      <a href="index.html" class="reset-btn">— knock —</a>
+    </section>
+
+    <section id="loading-gallery" class="loading-gallery">
+      <p class="loading-text">Opening the wall<span class="dots"></span></p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>"Take care of all your memories. For you cannot relive them."</p>
+    <p class="footer-sub">Bob Dylan &nbsp;·&nbsp; Knockin' on Heaven's Door &nbsp;·&nbsp; 1973</p>
+  </footer>
+
+  <div id="overlay" class="overlay hidden" onclick="closeOverlay()">
+    <div class="overlay-card" onclick="event.stopPropagation()">
+      <img id="overlay-img" src="" alt="" />
+      <div class="overlay-text">
+        <p class="overlay-memory" id="overlay-memory"></p>
+        <pre id="overlay-poem"></pre>
+        <p class="overlay-date" id="overlay-date"></p>
+      </div>
+      <button class="overlay-download" id="overlay-download">↓ download</button>
+      <button class="overlay-close" onclick="closeOverlay()">× close</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="download.js"></script>
+  <script src="gallery.js"></script>
+  <script src="audio.js"></script>
+</body>
+</html>

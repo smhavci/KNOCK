@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KNOCK — Design Your Door</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="gallery.css" />
+</head>
+<body>
+
+  <audio id="bg-audio" src="dylan.mp3" loop preload="auto"></audio>
+
+  <button id="mute-btn" aria-label="Mute">
+    <span id="mute-icon">♪</span>
+  </button>
+
+  <video class="scene-video" autoplay loop muted playsinline>
+    <source src="bg.mp4" type="video/mp4" />
+  </video>
+  <div class="color-grade"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <!-- ── Shared Header ───────────────────────────────── -->
+  <header id="site-header">
+    <p class="eyebrow">1973</p>
+    <h1>KNOCK</h1>
+    <p class="subtitle" id="page-subtitle">Write a childhood memory. Find your door.</p>
+    <button id="auth-btn" class="auth-btn" onclick="openAuthModal()">— sign in —</button>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════
+       VIEW: MAIN
+  ══════════════════════════════════════════════════ -->
+  <div id="view-main">
+    <main>
+
+      <section class="about-section">
+        <div class="about-block">
+          <p class="about-label">— the song —</p>
+          <p class="about-text">
+            In 1973, Bob Dylan wrote "Knockin' on Heaven's Door" for a single scene in Sam Peckinpah's
+            film <em>Pat Garrett &amp; Billy the Kid</em>. A sheriff, shot and bleeding in the dust of
+            the American West, asks his wife to take his badge. He can't use it anymore.
+            The song was supposed to be small — a moment in a film. Instead it became
+            one of the most covered songs in history, because it names something
+            almost everyone has felt: not death, but the <em>laying down.</em>
+            The quiet moment when something you carried for years — a self, a summer,
+            a version of home — stops belonging to you.
+          </p>
+        </div>
+
+        <div class="about-block">
+          <p class="about-label">— what we do —</p>
+          <p class="about-text">
+            You write a memory. A small one is enough. The smell of a kitchen,
+            a game played until the streetlights came on, a voice calling you in from outside.
+            Something you didn't know you were leaving, in the moment you left it.
+          </p>
+          <p class="about-text">
+            Two AI systems listen: one writes a poem for your memory — in the spare, aching
+            voice Dylan used in 1973, when the counterculture was tired and tender and learning
+            to let go. The other builds an image: your door, rendered in the warm grain
+            of a 35mm photograph from that same year.
+          </p>
+          <p class="about-text">
+            The poem and the image are yours. But they're also added to the wall —
+            a growing collage of every door knocked here, every childhood left at the threshold.
+            Someone you'll never meet wrote their memory an hour ago.
+            It's waiting for you in the gallery.
+          </p>
+        </div>
+
+        <div class="about-block">
+          <p class="about-label">— our door —</p>
+          <p class="about-text">
+            This project was built on the feeling that childhood ends the way a badge gets laid down:
+            not in a ceremony, not with a goodbye, but in a slow realization that it already happened.
+            Time moves without asking. One summer you're running barefoot on warm asphalt
+            and someone is calling your name from a window — and then, years later,
+            you understand that was the last time. You just didn't know it yet.
+          </p>
+          <p class="about-text">
+            We built KNOCK because we believe those moments deserve to be held still.
+            Even for a minute. Even in a poem and a faded photograph.
+            Because knocking on heaven's door isn't about what's behind it —
+            it's about who you were when you knocked.
+          </p>
+        </div>
+      </section>
+
+      <div class="wall-strip">
+        <button class="wall-strip-btn" onclick="showView('gallery')">
+          — see all doors on the wall →
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <section class="input-section">
+        <textarea
+          id="memory-input"
+          placeholder="A smell, a sound, a summer afternoon — a moment you didn't know would be the last..."
+          maxlength="600"
+        ></textarea>
+        <div id="display-toggle" class="display-toggle hidden">
+          <label class="toggle-label">
+            <input type="checkbox" id="show-name-toggle" />
+            <span>show as <em id="toggle-username-label"></em> on the wall</span>
+          </label>
+        </div>
+        <div class="input-footer">
+          <span id="char-count">0 / 600</span>
+          <div class="input-actions">
+            <button class="inspire-btn" onclick="inspireMe()">— inspire me —</button>
+            <button id="submit-btn" onclick="createDoor()">Knock</button>
+          </div>
+          <p id="signin-hint" class="signin-hint" onclick="openAuthModal()">— sign in to knock —</p>
+        </div>
+      </section>
+
+      <section id="loading" class="hidden">
+        <div class="loading-inner">
+          <div class="door-anim">
+            <div class="door-frame">
+              <div class="door-panel" id="door-panel"></div>
+            </div>
+          </div>
+          <p class="loading-text">Your door is opening<span class="dots"></span></p>
+        </div>
+      </section>
+
+      <section id="result" class="hidden">
+        <div class="result-grid">
+          <div class="poem-side">
+            <p class="label">— the poem —</p>
+            <pre id="poem-output"></pre>
+            <span class="cursor" id="cursor">|</span>
+          </div>
+          <div class="image-side">
+            <p class="label">— the door —</p>
+            <div class="door-frame-result">
+              <img id="door-image" src="" alt="Your door" />
+            </div>
+          </div>
+        </div>
+        <div class="result-footer">
+          <p class="dylan-quote" id="random-quote"></p>
+          <div class="result-actions">
+            <button class="listen-btn" id="listen-btn" onclick="listenPoem()">▷ listen</button>
+            <button class="download-btn" id="download-btn">↓ download your door</button>
+          </div>
+          <button class="reset-btn" onclick="reset()">— knock again —</button>
+        </div>
+      </section>
+
+      <section id="error" class="hidden">
+        <p id="error-msg" class="error-text"></p>
+        <button class="reset-btn" onclick="reset()">— try again —</button>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>"Mama, take this badge off of me — I can't use it anymore."</p>
+      <p class="footer-sub">Bob Dylan &nbsp;·&nbsp; Knockin' on Heaven's Door &nbsp;·&nbsp; 1973</p>
+      <button class="gallery-link" onclick="showView('gallery')">See all doors →</button>
+    </footer>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       VIEW: GALLERY
+  ══════════════════════════════════════════════════ -->
+  <div id="view-gallery" class="hidden">
+    <main>
+
+      <div class="gallery-nav">
+        <button class="nav-link" onclick="showView('main')">← knock your door</button>
+        <span id="door-count" class="door-count"></span>
+      </div>
+
+      <div class="context-strip">
+        <p>
+          In 1973, Bob Dylan wrote "Knockin' on Heaven's Door" for a dying sheriff
+          who had to lay down his badge. The song became something larger —
+          a meditation on the weight of things we carry, and the quiet relief of letting them go.
+          These are the doors of those who knocked.
+        </p>
+      </div>
+
+      <section id="gallery-grid" class="gallery-grid"></section>
+
+      <section id="empty-state" class="empty-state hidden">
+        <p>No doors yet. Be the first to knock.</p>
+        <button class="reset-btn" onclick="showView('main')">— knock —</button>
+      </section>
+
+      <section id="loading-gallery" class="loading-gallery">
+        <p class="loading-text">Opening the wall<span class="dots"></span></p>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>"Take care of all your memories. For you cannot relive them."</p>
+      <p class="footer-sub">Bob Dylan &nbsp;·&nbsp; Knockin' on Heaven's Door &nbsp;·&nbsp; 1973</p>
+    </footer>
+  </div>
+
+  <!-- ── Gallery overlay modal ──────────────────────── -->
+  <div id="overlay" class="overlay hidden" onclick="closeOverlay()">
+    <div class="overlay-card" onclick="event.stopPropagation()">
+      <img id="overlay-img" src="" alt="" />
+      <div class="overlay-text">
+        <p class="overlay-memory" id="overlay-memory"></p>
+        <pre id="overlay-poem"></pre>
+        <p class="overlay-date" id="overlay-date"></p>
+      </div>
+      <button class="overlay-download" id="overlay-download">↓ download</button>
+      <button class="overlay-close" onclick="closeOverlay()">× close</button>
+    </div>
+  </div>
+
+  <!-- ── Auth Modal ────────────────────────────────── -->
+  <div id="auth-modal" class="auth-modal hidden" onclick="closeAuthModal()">
+    <div class="auth-card" onclick="event.stopPropagation()">
+      <button class="auth-close" onclick="closeAuthModal()">× close</button>
+      <h2 class="auth-title">KNOCK</h2>
+      <p class="auth-sub">Sign in to leave your door on the wall.</p>
+
+      <div class="auth-tabs">
+        <button id="tab-signin" class="auth-tab active" onclick="switchAuthMode('signin')">sign in</button>
+        <span class="auth-tab-sep">·</span>
+        <button id="tab-signup" class="auth-tab" onclick="switchAuthMode('signup')">create account</button>
+      </div>
+
+      <div class="auth-fields">
+        <div id="username-row" class="auth-field hidden">
+          <input type="text" id="auth-username" placeholder="choose a name" autocomplete="username" />
+        </div>
+        <div class="auth-field">
+          <input type="email" id="auth-email" placeholder="your email" autocomplete="email" />
+        </div>
+        <div class="auth-field">
+          <input type="password" id="auth-password" placeholder="password" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') submitAuth()" />
+        </div>
+      </div>
+
+      <p id="auth-error" class="auth-error"></p>
+      <button id="auth-submit" class="auth-submit" onclick="submitAuth()">Sign in</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="router.js"></script>
+  <script src="download.js"></script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+  <script src="gallery.js"></script>
+  <script src="audio.js"></script>
+</body>
+</html>
