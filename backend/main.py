@@ -38,10 +38,6 @@ app.add_middleware(
 # Serve generated images
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 
-# Serve frontend assets (JS, CSS, etc.) — must come after /static
-if FRONTEND_DIR.exists():
-    app.mount("/app", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
-
 claude     = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy"))
 claude_async = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy"))
 oai        = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "dummy"))
@@ -280,3 +276,8 @@ def gallery_data():
     for door in doors:
         door["image_url"] = f"{BASE_URL}/static/{door['image_path']}"
     return doors
+
+
+# Serve frontend assets (JS, CSS, etc.) at root. Must be at the very bottom!
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIR), name="frontend")
