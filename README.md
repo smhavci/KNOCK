@@ -1,5 +1,7 @@
 # KNOCK — *The Door I Didn't Know I Was Leaving*
 
+[![GitHub](https://img.shields.io/badge/GitHub-smhavci%2FKNOCK-181717?style=flat&logo=github)](https://github.com/smhavci/KNOCK)
+
 > *"Knock, knock, knockin' on heaven's door..."*  
 > — Bob Dylan, Pat Garrett & Billy the Kid (1973)
 
