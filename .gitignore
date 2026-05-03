@@ -8,11 +8,6 @@ backend/static/images/
 # Database (user data — local only)
 backend/doors.db
 
-# Media files (copyrighted — add your own locally)
-# bg.mp4        → any looping video for background
-# dylan.mp3     → any ambient audio track
-frontend/bg.mp4
-frontend/dylan.mp3
 
 # Python
 __pycache__/
