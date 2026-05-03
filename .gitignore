@@ -2,9 +2,6 @@
 backend/.env
 .env
 
-# Frontend config (API base URL — environment specific)
-frontend/config.js
-
 # Generated images (large binary files, regenerated on demand)
 backend/static/images/
 

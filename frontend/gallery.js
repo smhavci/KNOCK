@@ -21,7 +21,7 @@ async function loadGallery() {
   loadingEl.classList.remove('hidden');
 
   try {
-    const res = await fetch(`${API_URL}/gallery`);
+    const res = await fetch(`${API_URL}/gallery-data`);
     const doors = await res.json();
 
     loadingEl.classList.add('hidden');

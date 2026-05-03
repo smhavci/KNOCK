@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import anthropic
@@ -20,6 +20,10 @@ load_dotenv()
 init_db()
 
 STATIC_DIR = Path(__file__).parent / "static" / "images"
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+
+# BASE_URL is set via environment variable on Railway; falls back to localhost for dev
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 
 app = FastAPI(title="KNOCK API")
 
@@ -30,7 +34,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Serve generated images
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
+
+# Serve frontend assets (JS, CSS, etc.) — must come after /static
+if FRONTEND_DIR.exists():
+    app.mount("/app", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
 claude     = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 claude_async = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -90,11 +99,23 @@ def signin(req: SigninRequest):
     return {"token": create_token(user["id"], user["username"])}
 
 
-# ── Health ────────────────────────────────────────────────
+# ── Health & frontend routes ──────────────────────────────
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/")
+def serve_index():
+    return FileResponse(FRONTEND_DIR / "index.html")
+
+
+@app.get("/gallery")
+def serve_gallery_page():
+    """Serve gallery HTML page at root /gallery (GET with no auth = HTML page)."""
+    # API gallery data is at /gallery-data
+    return FileResponse(FRONTEND_DIR / "gallery.html")
 
 
 # ── Main endpoints ────────────────────────────────────────
@@ -176,7 +197,7 @@ async def create_door(req: MemoryRequest, user=Depends(require_auth)):
             async with httpx.AsyncClient(timeout=30) as client:
                 img_res = await client.get(temp_url)
                 filepath.write_bytes(img_res.content)
-            image_url = f"http://127.0.0.1:8000/static/images/{filename}"
+            image_url = f"{BASE_URL}/static/images/{filename}"
         except Exception as e:
             yield _sse({"type": "error", "detail": f"Görsel kaydedilemedi: {e}"})
             return
@@ -252,9 +273,9 @@ async def speak(req: PoemRequest):
         raise HTTPException(status_code=502, detail=f"TTS failed: {str(e)}")
 
 
-@app.get("/gallery")
-def gallery():
+@app.get("/gallery-data")
+def gallery_data():
     doors = get_all_doors()
     for door in doors:
-        door["image_url"] = f"http://127.0.0.1:8000/static/{door['image_path']}"
+        door["image_url"] = f"{BASE_URL}/static/{door['image_path']}"
     return doors
